@@ -1,1 +1,4 @@
 pyserial
+matplotlib
+flask-socketio
+flask
