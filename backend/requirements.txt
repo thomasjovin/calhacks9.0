@@ -4,3 +4,5 @@ matplotlib
 flask-socketio
 flask
 CORS
+tuya-iot-py-sdk
+python-dotenv
