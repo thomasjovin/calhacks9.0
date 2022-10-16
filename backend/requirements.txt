@@ -1,4 +1,6 @@
 pyserial
+simple-websocket 
 matplotlib
 flask-socketio
 flask
+CORS
