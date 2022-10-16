@@ -14,6 +14,7 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.lines import Line2D
+from signalprocess import peak_calc
 
 PORT = 'COM3'
 BAUD_RATE = 9600
@@ -49,36 +50,48 @@ class Plotter:
 
 
 def serial_getter():
+
+    
+    ser = serial.Serial(PORT, BAUD_RATE, timeout=1)
     # grab fresh ADC values
     # note sometimes UART drops chars so we try a max of 5 times
     # to get proper data
-    # while True:
+    while True:
         # for i in range(1):
+
         line = ser.readline()
+
         # try:
         splits = line.decode('utf-8').replace('\r\n','').split(',')
-        print(splits)
-        
+        # print(splits)
+
         s = float(splits[0]) if len(splits) >=1 else 0
-        print(s, splits)
+        # print(s, splits)
         line = s
             # print(line)
         # except ValueError:
         #     '34'
-        print(line)
+        # print(line)
         yield line
 
+# fig, ax = plt.subplots()
+# plotter = Plotter(ax)
 
-ser = serial.Serial(PORT, BAUD_RATE, timeout=1)
+# ani = animation.FuncAnimation(fig, plotter.update, serial_getter, interval=1,
+#                               blit=True, cache_frame_data=False)
 
-fig, ax = plt.subplots()
-plotter = Plotter(ax)
+# ax.set_xlabel("Samples")
+# ax.set_ylabel("Voltage (V)")
+# fig.canvas.manager.set_window_title('Microphone ADC example')
+# fig.tight_layout()
+# plt.show()
 
-ani = animation.FuncAnimation(fig, plotter.update, serial_getter, interval=1,
-                              blit=True, cache_frame_data=False)
-
-ax.set_xlabel("Samples")
-ax.set_ylabel("Voltage (V)")
-fig.canvas.manager.set_window_title('Microphone ADC example')
-fig.tight_layout()
-plt.show()
+readings = [0] * 200
+for reading in serial_getter():
+    # emit("sensor_reading",{'data':str(reading)},broadcast=True)
+    # print(readings)
+    readings.append(reading)
+    peaks = peak_calc(readings)
+    if peaks > 0:
+        print(peaks)
+    readings.pop(0)
