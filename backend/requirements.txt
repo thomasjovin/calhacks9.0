@@ -6,3 +6,5 @@ flask
 CORS
 tuya-iot-py-sdk
 python-dotenv
+numpy 
+scipy
