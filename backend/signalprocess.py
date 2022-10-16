@@ -13,7 +13,7 @@ def peak_calc(datas, lookback = 2, combine_dist=50, cutoff = 50):
         cutoff (int, optional): least distance for gesture - prevents ignorning a double/triple gesture. Defaults to 50.
 
     Returns:
-        _type_: _description_
+        int: gesture count
     """
     peaks, _ = find_peaks(datas, height=0)
     last_n = peaks[-min(len(peaks),lookback):]
